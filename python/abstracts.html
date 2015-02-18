@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block content %}
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/jj70/abstracts">JJ70 abstract submission and
+      registration.</a>
+    </div>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a>User: {{ auth['firstname'] }} {{ auth['lastname'] }}</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+{% block registration %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-8">
+      <h1>Abstracts</h1>
+      <p>The call for abstracts is open. The deadline for abstract submission
+      for oral presentations is May 1st 2015.  If you are an invited
+      speaker, please submit an abstract too.  </p>
+      <h2>Abstract submission.
+      </h2>
+      <p>
+	Fill out the following form to send in the abstract to the conference
+	comittee.  Keep the length of the abstract at around 150 words. You
+	can add, and remove authors with the corresponding buttons. Each time
+	you press the <em>Save and preview</em> button, the form will be
+	saved, and the abstract will be previewed below these lines. Each user
+	can submit only one abstract.
+      </p>
+      {% if abstract_info %}
+      <div class="well">
+      <h2 class="text-center">{{ abstract_info['title']}}</h2>
+      {% for author in abstract_info['authors'] %}
+      <h4 class="text-center">
+      {{ author.name}}, <small>{{ author.affiliation }}</small>
+      </h4>
+      {% endfor %}
+      {{ abstract_info['text']|safe }}
+      </div>
+      {% endif %}
+
+      {% raw %}
+      <div ng-controller="appController">
+	<form action="/jj70/abstracts"
+	      method="post"
+	      enctype="multipart/form-data">
+	  <div class="form-group">
+	    <label for "title">Title</label>
+	    <input type="text"
+		   id="title"
+		   name="title"
+		   ng-model="title"
+		   class="form-control"
+		   required>
+	  </div>
+	  <div ng-repeat="author in authors">
+	    <div class="form-group">
+	      <label for="abstract">Author #{{ $index+1 }}</label>
+	      <input type="text"
+		     id="author{{ $index }}"
+		     name="author{{ $index }}"
+		     ng-model="author.name"
+		     class="form-control"
+		     required>
+	    </div>
+	    <div class="form-group">
+	      <input type="text"
+		     id="affiliation{{ $index }}"
+		     name="affiliation{{ $index }}"
+		     class="form-control"
+		     ng-model="author.affiliation"
+		     required>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <a class="btn btn-primary" ng-click="add_author()">Add author</a>
+	  </div>
+	  <div class="form-group">
+	    <a class="btn btn-danger" ng-click="remove_author()">
+	      Remove author</a>
+	  </div>
+	  <div class="form-group">
+	    <label for="abstract">Abstract text. You can write mathematical
+	    symbols with the usual LaTeX notation.</label>
+	    <textarea rows="20"
+		      id="abstract"
+		      class="form-control"
+		      ng-model="text"
+		      required></textarea>
+	  </div>
+	  <div class="form-group">
+	    <input type="hidden"
+		   name="kind"
+		   value="abstract"
+		   class="form-control">
+	  </div>
+	  <div class="form-group">
+	    <button ng-click="update()"
+		    class="btn btn-success">
+	      Submit and preview
+	    </button>
+	  </div>
+	</form>
+      </div>
+      {% endraw %}
+      <!-- <h2>Full paper template, and submission.</h2> -->
+      <!-- <form action="/jj70/abstract" -->
+      <!-- 	    method="post" -->
+      <!-- 	    enctype="multipart/form-data"> -->
+      <!-- 	<div class="form-group"> -->
+      <!-- 	  <input type="file" -->
+      <!-- 		 name="file" -->
+      <!-- 		 class="form-control" -->
+      <!-- 		 required> -->
+      <!-- 	</div> -->
+      <!-- 	<div class="form-group"> -->
+      <!-- 	  <input type="hidden" -->
+      <!-- 		 name="kind" -->
+      <!-- 		 value="paper" -->
+      <!-- 		 class="form-control"> -->
+      <!-- 	</div> -->
+      <!-- 	<div class="form-group"> -->
+      <!-- 	  <button type="submit" -->
+      <!-- 		  class="btn btn-default"> -->
+      <!-- 	    Upload -->
+      <!-- 	  </button> -->
+      <!-- 	</div> -->
+      <!-- </form> -->
+
+      <h1>Registration</h1>
+      <p>The registration will be open shortly, and will be anounced to all
+      the registered users. The conference registration form will be placed
+      exactly here. The registration fee will be of 200€. If you need
+      financial assistance, don't hesitate to contact the organization
+      comitee.</p>
+    </div>
+  </div>
+</div>
+
+{% endblock registration %}
+{% endblock content %}
