@@ -21,7 +21,7 @@ class LoginHandler(webapp2.RequestHandler):
             if self.request.get('error') == 'userexists':
                 template_values['error'] = 'This user is already registered'
             if self.request.get('error') == 'security':
-                template_values['error'] = 'Wrong answer to the security question'
+                template_values['error'] = 'Wrong answer to the antispam question'
 
         template = JINJA_ENVIRONMENT.get_template('login.html')
         self.response.write(template.render(template_values))
