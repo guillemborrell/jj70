@@ -5,18 +5,14 @@ import gdbm
 import json
 import random
 import string
+import time
 from webapp2_extras import sessions
-
-LATEX_TEMPLATE = """
-
-"""
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
-database = gdbm.open('database.gdbm','cs',0o0660)
 
 class LoginHandler(webapp2.RequestHandler):
     def get(self):
@@ -33,6 +29,12 @@ class LoginHandler(webapp2.RequestHandler):
     def post(self):
         username = self.request.get('username')
         password = self.request.get('password')
+        try:
+            database = gdbm.open('/var/jj70/database.gdbm','cf')
+        except:
+            time.sleep(0.1)
+            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+
         if ('usr'+username).encode('ascii','ignore') in database:
             auth_info = json.loads(
                 database[('usr'+username).encode('ascii','ignore')]
@@ -43,12 +45,15 @@ class LoginHandler(webapp2.RequestHandler):
                 session['key'] = auth_info['key']
                 session['username'] = username
                 session_store.save_sessions(self.response)
+                database.close()
                 self.redirect('/jj70/abstracts')
 
             else:
+                database.close()
                 self.redirect('/jj70/login')
             
         else:
+            database.close()
             self.redirect('/jj70/login')
 
         
@@ -60,9 +65,16 @@ class SignupHandler(webapp2.RequestHandler):
         lastname = self.request.get('lastname')
         password = self.request.get('password')
         safety = self.request.get('icode')
+        try:
+            database = gdbm.open('/var/jj70/database.gdbm','cf')
+        except:
+            time.sleep(1.0)
+            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+
 
         if safety=='Salamanca' or safety=='salamanca':
             if 'usr'+username.encode('ascii','ignore') in database:
+                database.close()
                 self.redirect('/jj70/login?error=userexists')
 
             else:
@@ -82,10 +94,11 @@ class SignupHandler(webapp2.RequestHandler):
                 session['key'] = randstring
                 session['username'] = username
                 session_store.save_sessions(self.response)
-
+                database.close()
                 self.redirect('/jj70/abstracts')
 
         else:
+            database.close()
             self.redirect('/jj70/login?error=security')
             
 
@@ -95,6 +108,12 @@ class AbstractsHandler(webapp2.RequestHandler):
         session = session_store.get_session()
         username = session.get('username')
         key = session.get('key')
+        try:
+            database = gdbm.open('/var/jj70/database.gdbm','cf')
+        except:
+            time.sleep(1.0)
+            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+
 
         if ('usr'+username).encode('ascii','ignore') in database:
             auth_info = json.loads(
@@ -112,13 +131,16 @@ class AbstractsHandler(webapp2.RequestHandler):
                     template_values['abstract_info'] = abstract_info
 
                 template = JINJA_ENVIRONMENT.get_template('abstracts.html')
+                database.close()
                 self.response.write(template.render(template_values))
                 
 
             else:
+                database.close()
                 self.redirect('/jj70/login')
                 
         else:
+            database.close()
             self.redirect('/jj70/login')
 
 
@@ -132,20 +154,35 @@ class AbstractResource(webapp2.RequestHandler):
         session = session_store.get_session()
         username = session.get('username')
         key = session.get('key')
+        try:
+            database = gdbm.open('/var/jj70/database.gdbm','cf')
+        except:
+            time.sleep(1.0)
+            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+
         if 'abstract'+key.encode('ascii','ignore') in database:
             abstract = database['abstract'+key.encode('ascii','ignore')]
+            database.close()
             self.response.out.headers['Content-Type'] = 'application/json'
             self.response.out.write(abstract)
 
         else:
+            database.close()
             self.abort(404)
         
     def post(self):
+        try:
+            database = gdbm.open('/var/jj70/database.gdbm','cf')
+        except:
+            time.sleep(1.0)
+            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+
         session_store = sessions.get_store(request=self.request)
         session = session_store.get_session()
         username = session.get('username')
         key = session.get('key')
         database['abstract'+key.encode('ascii','ignore')] = self.request.body
+        database.close()
 
 
 routes = [
