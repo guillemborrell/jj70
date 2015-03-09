@@ -114,35 +114,38 @@ class AbstractsHandler(webapp2.RequestHandler):
             time.sleep(1.0)
             database = gdbm.open('/var/jj70/database.gdbm','cf')    
 
-
-        if ('usr'+username).encode('ascii','ignore') in database:
-            auth_info = json.loads(
-                database[('usr'+username).encode('ascii','ignore')]
-            )
-
-            if auth_info['key'] == key:
-                template_values = {'auth':auth_info}
-
-                if 'abstract'+key.encode('ascii','ignore') in database:
-                    abstract_info = json.loads(
-                        database['abstract'+key.encode('ascii','ignore')]
-                    )
-                    abstract_info['text'] = abstract_info['text'].replace('\n','<br/>')
-                    template_values['abstract_info'] = abstract_info
-
-                template = JINJA_ENVIRONMENT.get_template('abstracts.html')
-                database.close()
-                self.response.write(template.render(template_values))
-                
-
+        if username:
+            if ('usr'+username).encode('ascii','ignore') in database:
+                auth_info = json.loads(
+                    database[('usr'+username).encode('ascii','ignore')]
+                )
+    
+                if auth_info['key'] == key:
+                    template_values = {'auth':auth_info}
+    
+                    if 'abstract'+key.encode('ascii','ignore') in database:
+                        abstract_info = json.loads(
+                            database['abstract'+key.encode('ascii','ignore')]
+                        )
+                        abstract_info['text'] = abstract_info['text'].replace('\n','<br/>')
+                        template_values['abstract_info'] = abstract_info
+    
+                    template = JINJA_ENVIRONMENT.get_template('abstracts.html')
+                    database.close()
+                    self.response.write(template.render(template_values))
+                    
+    
+                else:
+                    database.close()
+                    self.redirect('/jj70/login')
+                    
             else:
                 database.close()
                 self.redirect('/jj70/login')
-                
+    
         else:
             database.close()
             self.redirect('/jj70/login')
-
 
     def post(self):
         self.redirect('/jj70/abstracts')
