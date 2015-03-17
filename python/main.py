@@ -8,6 +8,9 @@ import string
 import time
 from webapp2_extras import sessions
 
+COST=150
+ACCOMPANYING_COST=100
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
@@ -156,6 +159,13 @@ class RegistrationHandler(webapp2.RequestHandler):
         session_store = sessions.get_store(request=self.request)
         session = session_store.get_session()
         username = session.get('username')
+        attendant = self.request.get('attendant')
+        accompanying = self.request.get('accompanying')
+        if accompanying == 'yes':
+            cost = (COST + ACCOMPANYING_COST)*100
+        else:
+            cost = (COST)*100
+
         key = session.get('key')
         try:
             database = gdbm.open('/var/jj70/database.gdbm','cf')
@@ -170,6 +180,8 @@ class RegistrationHandler(webapp2.RequestHandler):
                 )
     
                 if auth_info['key'] == key:
+                    registration = {"amount" = cost,
+                                    "currency" = 987}
                     template_values = {'auth':auth_info}    
                     template = JINJA_ENVIRONMENT.get_template('registration.html')
                     database.close()
