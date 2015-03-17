@@ -64,12 +64,6 @@
 	      enctype="multipart/form-data">
 	  <div class="form-group">
 	    <label for "title">Title</label>
-	    <input type="text"
-		   id="title"
-		   name="title"
-		   ng-model="title"
-		   class="form-control"
-		   required>
 	  </div>
 	  <div ng-repeat="author in authors">
 	    <div class="form-group">
@@ -126,53 +120,6 @@
       <p>The registration will be open shortly, and will be anounced to you to
       the email address you used to sign up. The conference registration form
       will be placed exactly here. The registration fee will be of 200€.</p>
-      <form action="/jj70/abstracts"
-	    method="post"
-	    enctype="multipart/form-data">
-	<div class="form-group">
-	  <label for "title">Title</label>
-	  <input type="text"
-		 id="title"
-		 name="title"
-		 class="form-control"
-		   required>
-	  </div>
-	  <div ng-repeat="author in authors">
-	    <div class="form-group">
-	      <label for="abstract">Author #{{ $index+1 }}</label>
-	      <input type="text"
-		     id="author{{ $index }}"
-		     name="author{{ $index }}"
-		     class="form-control"
-		     required>
-	    </div>
-	    <div class="form-group">
-	      <input type="text"
-		     id="affiliation{{ $index }}"
-		     name="affiliation{{ $index }}"
-		     class="form-control"
-		     required>
-	    </div>
-	  </div>
-	  <div class="form-group">
-	    <label for="abstract">Abstract text. You can write mathematical
-	      symbols with the usual LaTeX notation.</label>
-	    <textarea rows="20"
-		      id="abstract"
-		      class="form-control"
-		      required></textarea>
-	  </div>
-	  <div class="form-group">
-	    <input type="hidden"
-		   name="kind"
-		   value="abstract"
-		   class="form-control">
-	  </div>
-	  <div class="form-group">
-	    <input type="submit"
-		    class="btn btn-success" />
-	  </div>
-	</form>
 
       <div class="well">
 	<p>This website was coded by Guillem Borrell. If it does not work for
