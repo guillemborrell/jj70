@@ -117,10 +117,42 @@
       {% endraw %}
 
       <h1>Registration</h1>
-      <p>The registration will be open shortly, and will be anounced to you to
-      the email address you used to sign up. The conference registration form
-      will be placed exactly here. The registration fee will be of 200€.</p>
+      <p>The cost of the early bird registration is 150€. From May 1st,
+      registration will be 225€. You can purchase an invitation for an
+      accompanying person with a cost of 100€.  Registration costs cover
+      coffee breaks, and dinner.</p>
 
+      <form action="/jj70/registration"
+	    method="get"
+	    enctype="multipart/form-data">
+	<div class="form-group">
+	  <label for="title">Title</label>
+	</div>
+	<div class="form-group">
+	  <label for="abstract">Name of the attendant</label>
+	  <input type="text"
+		 id="abstract"
+		 name="author{{ $index }}"
+		 class="form-control"
+		 required>
+	</div>
+	<div class="form-group">
+	  <label for="abstract">Select this box if you want to bring an
+	  accompanying person.</label>
+	  <input type="checkbox"
+		 id="accompanying"
+		 value="yes"
+		 class="form-control"
+		 required>
+	</div>
+	<div class="form-group">
+	  <input type="submit" value="Register"
+		 class="btn btn-success">
+	    Submit and preview
+	  </button>
+	</div>
+      </form>
+      
       <div class="well">
 	<p>This website was coded by Guillem Borrell. If it does not work for
 	any reason, feel free write an email to
