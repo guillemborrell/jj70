@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/jj70/abstracts">JJ70</a>
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+	<li><a href="#">
+	    User: {{ auth['firstname'] }} {{ auth['lastname'] }}
+	  </a>
+	</li>
+	<li><a href="/jj70">Log Out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% block registration %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-8">
+      Registration unsuccessful. Please, go back
+      to <a href="/jj70/abstracts">the registration page</a>, and try to
+      register again. If this problem persists, feel free to contact the
+      organization committee.
+    </div>
+  </div>
+</div>
+
+{% endblock registration %}
+{% endblock content %}

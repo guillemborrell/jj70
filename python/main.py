@@ -151,6 +151,89 @@ class AbstractsHandler(webapp2.RequestHandler):
         self.redirect('/jj70/abstracts')
             
 
+class OKHandler(webapp2.RequestHandler):
+    def get(self):
+        session_store = sessions.get_store(request=self.request)
+        session = session_store.get_session()
+        username = session.get('username')
+        key = session.get('key')
+        try:
+            database = gdbm.open('/var/jj70/database.gdbm','cf')
+        except:
+            time.sleep(1.0)
+            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+
+        if username:
+            if ('usr'+username).encode('ascii','ignore') in database:
+                auth_info = json.loads(
+                    database[('usr'+username).encode('ascii','ignore')]
+                )
+    
+                if auth_info['key'] == key:
+                    template_values = {'auth':auth_info}    
+                    template = JINJA_ENVIRONMENT.get_template('ok.html')
+                    database.close()
+                    self.response.write(template.render(template_values))
+                    
+    
+                else:
+                    database.close()
+                    self.redirect('/jj70/login')
+                    
+            else:
+                database.close()
+                self.redirect('/jj70/login')
+    
+        else:
+            database.close()
+            self.redirect('/jj70/login')
+
+    def post(self):
+        self.redirect('/jj70/abstracts')
+
+
+class KOHandler(webapp2.RequestHandler):
+    def get(self):
+        session_store = sessions.get_store(request=self.request)
+        session = session_store.get_session()
+        username = session.get('username')
+        key = session.get('key')
+        try:
+            database = gdbm.open('/var/jj70/database.gdbm','cf')
+        except:
+            time.sleep(1.0)
+            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+
+        if username:
+            if ('usr'+username).encode('ascii','ignore') in database:
+                auth_info = json.loads(
+                    database[('usr'+username).encode('ascii','ignore')]
+                )
+    
+                if auth_info['key'] == key:
+                    template_values = {'auth':auth_info}    
+                    template = JINJA_ENVIRONMENT.get_template('ko.html')
+                    database.close()
+                    self.response.write(template.render(template_values))
+                    
+    
+                else:
+                    database.close()
+                    self.redirect('/jj70/login')
+                    
+            else:
+                database.close()
+                self.redirect('/jj70/login')
+    
+        else:
+            database.close()
+            self.redirect('/jj70/login')
+
+    def post(self):
+        self.redirect('/jj70/abstracts')
+
+
+
 class AbstractResource(webapp2.RequestHandler):
     def get(self):
         session_store = sessions.get_store(request=self.request)
@@ -192,6 +275,8 @@ routes = [
     (r'/jj70/login', LoginHandler),
     (r'/jj70/abstracts', AbstractsHandler),
     (r'/jj70/signup', SignupHandler),
+    (r'/jj70/registration_successful', OKHandler),
+    (r'/jj70/registration_unsuccessful', KOHandler),
     (r'/jj70/abstractresource', AbstractResource),
 ]
 
