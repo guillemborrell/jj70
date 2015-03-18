@@ -39,7 +39,6 @@
       {% endif %}
       <p><strong>Registration ID</strong>: {{ registration.order }} </p>
       <p><strong>Total amount</strong>: {{ registration.amount/100 }} €</p>
-      {{ registration }}
 
     <form name=compra action=https://sis-t.redsys.es:25443/sis/realizarPago method=post>
       <input type=hidden name=Ds_Merchant_MerchantName value='CONGRESO JJ70' />
@@ -52,6 +51,7 @@
       <input type=hidden name=Ds_Merchant_Currency value='978' />
       <input type=hidden name=Ds_Merchant_TransactionType value='0' />
       <input type=hidden name=Ds_Merchant_ConsumerLanguage value='2' />
+      <input type=hidden name=Ds_Merchant_MerchantData value='{{ auth.key }}_{{ registration.order }}'>
       <input type=hidden name=Ds_Merchant_MerchantURL value='{{ registration.URL }}' />
       <input type=hidden name=Ds_Merchant_UrlOK value='{{ registration.URLOK }}'>
       <input type=hidden name=Ds_Merchant_UrlKO value='{{ registration.URLKO }}'>
