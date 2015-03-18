@@ -40,72 +40,47 @@
       
       <p><strong>Registration</strong>: {{ registration.amount/100 }} €</p>
       {{ registration }}
-      <form action="https://sis-t.redsys.es:25443/sis/realizarPago"
-	    method="post"
-	    target="_blank">
-      <!-- <form action="/jj70/registration" -->
-      <!-- 	    method="get" -->
-      <!-- 	    target="_blank"> -->
-	<input type="hidden"
-	       name="Ds_Merchant_Name"
-	       value="JJ70 Conference">
+      <!-- <form -->
+      <!-- 	 name=compra -->
+      <!-- 	 action=https://sis-t.redsys.es:25443/sis/realizarPago -->
+      <!-- 	 method=post> -->
+      <!-- <\!-- <form action="/jj70/registration" -\-> -->
+      <!-- <\!-- 	    method="get" -\-> -->
+      <!-- <\!-- 	    target="_blank"> -\-> -->
+      <!-- 	<input type=hidden name=Ds_Merchant_Name value='CONGRESO JJ70'> -->
+      <!-- 	<input type=hidden name=Ds_Merchant_Amount value='{{ registration.amount }}'> -->
+      <!-- 	<input type=hidden name=Ds_Merchant_Currency value='{{ registration.currency }}'> -->
+      <!-- 	<input type=hidden name=Ds_Merchant_Order value='{{ registration.order }}'> -->
+      <!-- 	<input type=hidden name=Ds_Merchant_MerchantCode value='{{ registration.code }}'> -->
+      <!-- 	<input type=hidden name=Ds_Merchant_MerchantURL value='{{ registration.URL }}'> -->
+      <!-- 	<\!-- <input type=hidden name=Ds_Merchant_UrlOK value='{{ registration.URLOK }}'> -\-> -->
+      <!-- 	<\!-- <input type=hidden name=Ds_Merchant_UrlKO value='{{ registration.URLKO }}'> -\-> -->
+      <!-- 	<input type=hidden name=Ds_Merchant_MerchantSignature value='{{ registration.signature }}'> -->
+      <!-- 	<\!-- <input type=hidden name=Ds_Merchant_ConsumerLanguage  value='2'> -\-> -->
+      <!-- 	<input type=hidden name=Ds_Merchant_MerchantTerminal  value='{{ registration.terminal }}'> -->
+      <!-- 	<input type=hidden name=Ds_Merchant_SumTotal value='{{ registration.amount }}'> -->
+      <!-- 	<input type=hidden name=Ds_Merchant_TransactionType value='0'> -->
+      <!-- 	<input type=hidden name=Ds_Merchant_MerchantData value='{{ auth.key }}'> -->
+      <!-- 	<input type=hidden name=Ds_Merchant_ChargeExpiryDate value='2015-09-30' /> -->
+      <!-- 	<input type=submit value='Proceed to payment' class='btn btn-primary'> -->
+      <!-- </form> -->
 
-	<input type="hidden"
-	       name="Ds_Merchant_Amount"
-	       value="{{ registration.amount }}">
-
-	<input type="hidden"
-	       name="Ds_Merchant_Currency"
-	       value="{{ registration.currency }}">
-
-	<input type="hidden"
-	       name="Ds_Merchant_Order"
-	       value="{{ registration.order }}">
-
-	<input type="hidden"
-	       name="Ds_Merchant_MerchantCode"
-	       value="{{ registration.code }}">
-
-	<input type="hidden"
-	       name="Ds_Merchant_MerchantURL"
-	       value="{{ registration.URL }}">
-
-	<input type="hidden"
-	       name="Ds_Merchant_UrlOK"
-	       value="{{ registration.URLOK }}">
-
-	<input type="hidden"
-	       name="Ds_Merchant_UrlKO"
-	       value="{{ registration.URLKO }}">
-
-	<input type="hidden"
-	       name="Ds_Merchant_MerchantSignature"
-	       value="{{ registration.signature }}">
-
-	<input type="hidden"
-	       name="Ds_Merchant_ConsumerLanguage"
-	       value="002">
-
-	<input type="hidden"
-	       name="Ds_Merchant_MerchantTerminal"
-	       value="{{ registration.terminal }}">
-
-	<input type="hidden"
-	       name="Ds_Merchant_SumTotal"
-	       value="{{ registration.amount }}">
-
-	<input type="hidden"
-	       name="Ds_Merchant_TransactionType"
-	       value="0">
-
-	<input type="hidden"
-	       name="Ds_Merchant_MerchantData"
-	       value="{{ auth.key }}">
-
-
-	<input type="submit" value="Proceed to payment"
-	       class="btn btn-primary">
-      </form>
+    <form name=compra action=https://sis-t.redsys.es:25443/sis/realizarPago method=post>
+      <input type=hidden name=Ds_Merchant_MerchantName value='CONGRESO JJ70' />
+      <input type=hidden name=Ds_Merchant_MerchantCode value='334110855' />
+      <input type=hidden name=Ds_Merchant_Terminal value='1' />
+      <input type=hidden name=Ds_Merchant_Order value='{{ registration.order }}' />
+      <input type=hidden name=Ds_Merchant_Amount value='{{ registration.amount}}' />
+      <input type=hidden name=Ds_Merchant_SumTotal value='{{ registration.amount}}' />
+      <input type=hidden name=Ds_Merchant_DateFrecuency value='1' />
+      <input type=hidden name=Ds_Merchant_ChargeExpiryDate value='2015-09-30' />
+      <input type=hidden name=Ds_Merchant_Currency value='978' />
+      <input type=hidden name=Ds_Merchant_TransactionType value='0' />
+      <input type=hidden name=Ds_Merchant_ConsumerLanguage value='2' />
+      <input type=hidden name=Ds_Merchant_MerchantURL value='{{ registration.URL }}' />
+      <input type=hidden name=Ds_Merchant_MerchantSignature value='{{ registration.signature }}' />
+      <input type=submit name=Aceptar value='Proceed to Payment' class='btn btn-primary' />
+    </form> 
 
     </div>
   </div>
