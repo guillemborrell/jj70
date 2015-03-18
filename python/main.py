@@ -6,6 +6,7 @@ import json
 import random
 import string
 import time
+import sha
 from webapp2_extras import sessions
 
 COST=150
@@ -33,10 +34,10 @@ class LoginHandler(webapp2.RequestHandler):
         username = self.request.get('username')
         password = self.request.get('password')
         try:
-            database = gdbm.open('/var/jj70/database.gdbm','cf')
+            database = gdbm.open('database.gdbm','cf')
         except:
             time.sleep(0.1)
-            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+            database = gdbm.open('database.gdbm','cf')    
 
         if ('usr'+username).encode('ascii','ignore') in database:
             auth_info = json.loads(
@@ -69,10 +70,10 @@ class SignupHandler(webapp2.RequestHandler):
         password = self.request.get('password')
         safety = self.request.get('icode')
         try:
-            database = gdbm.open('/var/jj70/database.gdbm','cf')
+            database = gdbm.open('database.gdbm','cf')
         except:
             time.sleep(1.0)
-            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+            database = gdbm.open('database.gdbm','cf')    
 
 
         if safety=='Salamanca' or safety=='salamanca':
@@ -112,10 +113,10 @@ class AbstractsHandler(webapp2.RequestHandler):
         username = session.get('username')
         key = session.get('key')
         try:
-            database = gdbm.open('/var/jj70/database.gdbm','cf')
+            database = gdbm.open('database.gdbm','cf')
         except:
             time.sleep(1.0)
-            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+            database = gdbm.open('database.gdbm','cf')    
 
         if username:
             if ('usr'+username).encode('ascii','ignore') in database:
@@ -156,6 +157,12 @@ class AbstractsHandler(webapp2.RequestHandler):
 
 class RegistrationHandler(webapp2.RequestHandler):
     def get(self):
+        secret = 'qwertyasdf0123456789'
+        regURL = 'http://torroja.dmt.upm.es/jj70/registration'
+        okURL = 'http://torroja.dmt.upm.es/jj70/registration_successful'
+        koURL = 'http://torroja.dmt.upm.es/jj70/registration_unsuccessful'
+        order = ''.join(str(random.randint(0,9)) for _ in xrange(12))
+        code = 334110855
         session_store = sessions.get_store(request=self.request)
         session = session_store.get_session()
         username = session.get('username')
@@ -166,12 +173,14 @@ class RegistrationHandler(webapp2.RequestHandler):
         else:
             cost = (COST)*100
 
+        signature = sha.new(str(cost)+order+str(code)+'978'+'0'+regURL+secret)
+
         key = session.get('key')
         try:
-            database = gdbm.open('/var/jj70/database.gdbm','cf')
+            database = gdbm.open('database.gdbm','cf')
         except:
             time.sleep(1.0)
-            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+            database = gdbm.open('database.gdbm','cf')    
 
         if username:
             if ('usr'+username).encode('ascii','ignore') in database:
@@ -180,9 +189,19 @@ class RegistrationHandler(webapp2.RequestHandler):
                 )
     
                 if auth_info['key'] == key:
-                    registration = {"amount" = cost,
-                                    "currency" = 987}
-                    template_values = {'auth':auth_info}    
+                    registration = {'amount':cost,
+                                    'accompanying':accompanying,
+                                    'attendant':attendant,
+                                    'order': order,
+                                    'code':code,
+                                    'URL':regURL,
+                                    'URLOK':okURL,
+                                    'URLKO':koURL,
+                                    'terminal':1,
+                                    'currency':978,
+                                    'signature':signature.hexdigest()}
+                    template_values = {'auth':auth_info,
+                                       'registration':registration}    
                     template = JINJA_ENVIRONMENT.get_template('registration.html')
                     database.close()
                     self.response.write(template.render(template_values))
@@ -211,10 +230,10 @@ class OKHandler(webapp2.RequestHandler):
         username = session.get('username')
         key = session.get('key')
         try:
-            database = gdbm.open('/var/jj70/database.gdbm','cf')
+            database = gdbm.open('database.gdbm','cf')
         except:
             time.sleep(1.0)
-            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+            database = gdbm.open('database.gdbm','cf')    
 
         if username:
             if ('usr'+username).encode('ascii','ignore') in database:
@@ -252,10 +271,10 @@ class KOHandler(webapp2.RequestHandler):
         username = session.get('username')
         key = session.get('key')
         try:
-            database = gdbm.open('/var/jj70/database.gdbm','cf')
+            database = gdbm.open('database.gdbm','cf')
         except:
             time.sleep(1.0)
-            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+            database = gdbm.open('database.gdbm','cf')    
 
         if username:
             if ('usr'+username).encode('ascii','ignore') in database:
@@ -294,10 +313,10 @@ class AbstractResource(webapp2.RequestHandler):
         username = session.get('username')
         key = session.get('key')
         try:
-            database = gdbm.open('/var/jj70/database.gdbm','cf')
+            database = gdbm.open('database.gdbm','cf')
         except:
             time.sleep(1.0)
-            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+            database = gdbm.open('database.gdbm','cf')    
 
         if 'abstract'+key.encode('ascii','ignore') in database:
             abstract = database['abstract'+key.encode('ascii','ignore')]
@@ -311,10 +330,10 @@ class AbstractResource(webapp2.RequestHandler):
         
     def post(self):
         try:
-            database = gdbm.open('/var/jj70/database.gdbm','cf')
+            database = gdbm.open('database.gdbm','cf')
         except:
             time.sleep(1.0)
-            database = gdbm.open('/var/jj70/database.gdbm','cf')    
+            database = gdbm.open('database.gdbm','cf')    
 
         session_store = sessions.get_store(request=self.request)
         session = session_store.get_session()

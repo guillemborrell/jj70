@@ -28,20 +28,27 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-8">
-      <p>Confirm registration</p>
-
+      <h2>Confirm registration information.</h2>
+      <p><strong>Attendant name:</strong>
+	{{ registration.attendant  }}</p>
+      {% if registration.accompanying %}
+      <p><strong>With accompanying person.</strong> Additional 100€ are
+      charged.</p> 
+      {% else %}
+      <p><strong>Single attendant registration</strong></p>
+      {% endif %}
+      
+      <p><strong>Registration</strong>: {{ registration.amount/100 }} €</p>
+      {{ registration }}
       <form action="https://sis-t.redsys.es:25443/sis/realizarPago"
 	    method="post"
 	    target="_blank">
-
-	<div class="form-group">
-	  <label for="abstract">Registration name</label>
-	  <input type="text"
-		 name="Ds_Merchant_Titular"
-		 id="abstract"
-		 class="form-control"
-		 required>
-	</div>
+      <!-- <form action="/jj70/registration" -->
+      <!-- 	    method="get" -->
+      <!-- 	    target="_blank"> -->
+	<input type="hidden"
+	       name="Ds_Merchant_Name"
+	       value="JJ70 Conference">
 
 	<input type="hidden"
 	       name="Ds_Merchant_Amount"
@@ -76,13 +83,28 @@
 	       value="{{ registration.signature }}">
 
 	<input type="hidden"
-	       name="Ds_Merchant_MerchantTerminal"
-	       value="{{ registration.terminal }}">
+	       name="Ds_Merchant_ConsumerLanguage"
+	       value="002">
 
 	<input type="hidden"
 	       name="Ds_Merchant_MerchantTerminal"
 	       value="{{ registration.terminal }}">
 
+	<input type="hidden"
+	       name="Ds_Merchant_SumTotal"
+	       value="{{ registration.amount }}">
+
+	<input type="hidden"
+	       name="Ds_Merchant_TransactionType"
+	       value="0">
+
+	<input type="hidden"
+	       name="Ds_Merchant_MerchantData"
+	       value="{{ auth.key }}">
+
+
+	<input type="submit" value="Proceed to payment"
+	       class="btn btn-primary">
       </form>
 
     </div>
